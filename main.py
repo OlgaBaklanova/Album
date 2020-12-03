@@ -4,18 +4,13 @@ class Track():
         self.duration_track = duration_track
 
     def show(self):
-        print(f'{self.name_track} - {self.duration_track}')
+        return f'{self.name_track} - {self.duration_track}'
 
+    def get_name(self):
+        return self.name_track
 
-ga_oye = Track('Open Your Eyes', 3)
-ga_m = Track('Maria', 3)
-ga_gb = Track('Get Busy', 3)
-lp_f = Track('Faint', 3)
-lp_n = Track('Numb', 3)
-lp_bth = Track('Breaking the Habit', 3)
-
-print(ga_gb.show())
-
+    def get_duration(self):
+        return self.duration_track
 
 class Album():
     def __init__(self, name_album, band):
@@ -25,38 +20,36 @@ class Album():
 
 
     def get_tracks(self):
-        print(f'Треки группы {self.band} в альбоме: {self.list_track[0]}, {self.list_track[1]}, {self.list_track[2]}')
+        return [track.show() for track in self.list_track]
+
 
     def add_track(self, track):
+        if not isinstance(track, Track):
+            raise NotImplementedError('Can not add this object to track list')
         self.list_track.append(track)
-        print(f'Трек {track} добавлен в альбом {self.list_track}')
 
     def get_duration(self):
-        summ_duration_ga = 0
-        summ_duration_lp = 0
-        for duration_ga in dict_ga.values():
-            summ_duration_ga += duration_ga
-        print(f' Длительность альбома Proud Like a God - {summ_duration_ga}')
-        for duration_lp in dict_lp.values():
-            summ_duration_lp += duration_lp
-        print(f' Длительность альбома Meteora - {summ_duration_lp}')
-
-dict_ga = {ga_oye.duration_track: 3, ga_m.duration_track: 3, ga_gb.duration_track: 3}
-dict_lp = {lp_f.duration_track: 3, lp_n.duration_track: 3, lp_bth.duration_track: 3}
-
-guano_apes = Album('Proud Like a God', 'Guano Apes')
-linkin_park = Album('Meteora', 'LINKIN PARK')
-
-guano_apes.list_track.append('Open Your Eyes')
-guano_apes.list_track.append('Maria')
-guano_apes.list_track.append('Get Busy')
-
-linkin_park.list_track.append('Faint')
-linkin_park.list_track.append('Numb')
-linkin_park.list_track.append('Breaking the Habit')
-
-print(linkin_park.get_tracks())
-print(linkin_park.add_track('In the End'))
-print(guano_apes.get_duration())
+        return sum([track.duration_track for track in self.list_track])
 
 
+albums = []
+
+album = Album('Proud Like a God', 'Guano Apes')
+album.add_track(Track('Open Your Eyes', 3))
+album.add_track(Track('Maria', 3))
+album.add_track(Track('Get Busy', 3))
+
+albums.append(album)
+
+album = Album('Meteora', 'LINKIN PARK')
+album.add_track(Track('Faint', 3))
+album.add_track(Track('Numb', 3))
+album.add_track(Track('Breaking the Habit', 3))
+
+albums.append(album)
+
+for album in albums:
+    print(f'Альбом "{album.name_album}" группы {album.band}:')
+    for track in enumerate(album.get_tracks(), 1):
+        print(f'{track[0]}. {track[1]}')
+    print(f'Общая длительность альбома: {album.get_duration()} минут\n')
